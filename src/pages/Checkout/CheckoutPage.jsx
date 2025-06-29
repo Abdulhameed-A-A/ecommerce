@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router'
 import './CheckoutPage.css'
 import './CheckoutPage-header.css'
 import { OrderSummary } from './OrderSummary';
 import { PaymentSummary } from './PaymentSummary';
+import { CheckoutHeader } from './CheckoutHeader'
 
 export function CheckoutPage({ cart }) {
   const [deliveryOptions, setDeliveryOptions] = useState([]);
@@ -25,26 +25,7 @@ export function CheckoutPage({ cart }) {
   return (
     <>
       <title>Checkout</title>
-
-      <div className="checkout-header">
-        <div className="header-content">
-          <div className="checkout-header-left-section">
-            <Link to="/">
-              <img className="logo" src="images/logo.png" />
-              <img className="mobile-logo" src="images/mobile-logo.png" />
-            </Link>
-          </div>
-
-          <div className="checkout-header-middle-section">
-            Checkout (<a className="return-to-home-link"
-              href="index.html">3 items</a>)
-          </div>
-
-          <div className="checkout-header-right-section">
-            <img src="images/icons/checkout-lock-icon.png" />
-          </div>
-        </div>
-      </div>
+      <CheckoutHeader cart={cart} />
 
       <div className="checkout-page">
         <div className="page-title">Review your order</div>
