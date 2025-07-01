@@ -1,21 +1,51 @@
+import dayjs from 'dayjs';
+import axios from 'axios'
+import { Link } from 'react-router';
+import { useParams } from 'react-router'
+import { useState, useEffect } from 'react';
 import { Header } from '../components/Header'
 import "./TrackingPage.css"
 
-export function TrackingPage() {
+export function TrackingPage({ cart }) {
+  const { orderId, productId } = useParams();
+  const [order, setOrder] = useState(null);
+
+  useEffect(() => {
+    const fetchTrackingData = async() => {
+      const response = await axios.get(`api/orders/${orderId}?expand=products`)
+      setOrder(response.data)
+    }
+
+    fetchTrackingData();
+  }, [orderId]);
+
+  if (!order) {
+    return null;
+  }
+
+  let orderProduct;
+  try {
+    orderProduct = order.products.find((orderProduct) => orderProduct.productId == productId);
+    if (!orderProduct) {
+      throw new Error('Product not found in order');
+    }
+  } catch (error) {
+    return <div className="error-message">Error: {error.message}</div>;
+  }
+
   return(
     <>
       <title>Tracking</title>
-
-      <Header />
+      <Header cart={cart}/>
 
       <div className="header">
       <div className="left-section">
-        <a href="/" className="header-link">
+        <Link to="/" className="header-link">
           <img className="logo"
             src="images/logo-white.png" />
           <img className="mobile-logo"
             src="images/mobile-logo-white.png" />
-        </a>
+        </Link>
       </div>
 
       <div className="middle-section">
@@ -27,38 +57,38 @@ export function TrackingPage() {
       </div>
 
       <div className="right-section">
-        <a className="orders-link header-link" href="/orders">
+        <Link className="orders-link header-link" to="/orders">
 
           <span className="orders-text">Orders</span>
-        </a>
+        </Link>
 
-        <a className="cart-link header-link" href="/checkout">
+        <Link className="cart-link header-link" to="/checkout">
           <img className="cart-icon" src="images/icons/cart-icon.png" />
           <div className="cart-quantity">3</div>
           <div className="cart-text">Cart</div>
-        </a>
+        </Link>
       </div>
     </div>
 
     <div className="tracking-page">
       <div className="order-tracking">
-        <a className="back-to-orders-link link-primary" href="/orders">
+        <Link className="back-to-orders-link link-primary" to="/orders">
           View all orders
-        </a>
+        </Link>
 
         <div className="delivery-date">
-          Arriving on Monday, June 13
+          Arriving on {dayjs(orderProduct.estimatedDeliveryTimeMs).format('dddd, MMMM D')}
         </div>
 
         <div className="product-info">
-          Black and Gray Athletic Cotton Socks - 6 Pairs
+          {orderProduct.product.name}
         </div>
 
         <div className="product-info">
-          Quantity: 1
+          Quantity: {orderProduct.quantity}
         </div>
 
-        <img className="product-image" src="images/products/athletic-cotton-socks-6-pairs.jpg" />
+        <img className="product-image" src={orderProduct.product.image} />
 
         <div className="progress-labels-container">
           <div className="progress-label">

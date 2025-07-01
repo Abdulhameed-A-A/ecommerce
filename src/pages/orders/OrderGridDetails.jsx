@@ -4,22 +4,22 @@ import { Fragment } from 'react';
 export function OrderGridDetails({ order }) {
   return (
     <div className="order-details-grid">
-      {order.products.map((OrderProduct) => {
+      {order.products.map((orderProduct) => {
         return (
-          <Fragment key={OrderProduct.product.id}>
+          <Fragment key={orderProduct.product.id}>
             <div className="product-image-container">
-              <img src={OrderProduct.product.image} />
+              <img src={orderProduct.product.image} />
             </div>
 
             <div className="product-details">
               <div className="product-name">
-                {OrderProduct.product.name}
+                {orderProduct.product.name}
               </div>
               <div className="product-delivery-date">
-                Arriving on: {dayjs(OrderProduct.estimatedDeliveryTimeMs).format('dddd, MMMM D')}
+                Arriving on: {dayjs(orderProduct.estimatedDeliveryTimeMs).format('dddd, MMMM D')}
               </div>
               <div className="product-quantity">
-                Quantity: {OrderProduct.quantity}
+                Quantity: {orderProduct.quantity}
               </div>
               <button className="buy-again-button button-primary">
                 <img className="buy-again-icon" src="images/icons/buy-again.png" />
@@ -28,7 +28,7 @@ export function OrderGridDetails({ order }) {
             </div>
 
             <div className="product-actions">
-              <a href="/tracking">
+              <a href={`/tracking/${order.id}/${orderProduct.product.id}`}>
                 <button className="track-package-button button-secondary">
                   Track package
                 </button>
